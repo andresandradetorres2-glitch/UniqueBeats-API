@@ -42,6 +42,7 @@ Error en la autenticación.
 
 #### Estructura del proyecto
 UniqueBeats-API/
+UniqueBeats-API/
 │
 ├── backend/
 │   ├── database.js
@@ -62,6 +63,7 @@ UniqueBeats-API/
 │
 ├── .gitignore
 └── README.md
+
 ##### API
 
 Registro
