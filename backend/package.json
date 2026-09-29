@@ -1,0 +1,16 @@
+{
+  "name": "uniquebeats-api",
+  "version": "1.0.0",
+  "description": "API de autenticación para UniqueBeats",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^18.0.4",
+    "express": "^5.1.0",
+    "mysql2": "^3.14.4"
+  }
+}
