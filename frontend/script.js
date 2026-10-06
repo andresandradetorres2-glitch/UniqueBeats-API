@@ -40,10 +40,28 @@ document.addEventListener('DOMContentLoaded', () => {
     // ENLACE ADMIN
     // ------------------------
     const adminPanelLink = document.getElementById('adminPanelLink');
+    const accountLink = document.getElementById('accountLink');
     const usuarioGuardado = obtenerUsuarioGuardado();
 
     if (adminPanelLink && usuarioGuardado && usuarioGuardado.tipo === 'admin') {
         adminPanelLink.hidden = false;
+    }
+
+    if (accountLink && usuarioGuardado) {
+        accountLink.textContent = 'Cerrar sesión';
+        accountLink.href = '#';
+
+        accountLink.addEventListener('click', (event) => {
+            event.preventDefault();
+
+            localStorage.removeItem('usuario');
+
+            if (adminPanelLink) {
+                adminPanelLink.hidden = true;
+            }
+
+            window.location.href = 'Index-UniqueBeats.html';
+        });
     }
 
 
