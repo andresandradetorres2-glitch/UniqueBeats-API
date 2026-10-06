@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 
 const authRoutes = require("./routes/auth");
+const beatsRoutes = require("./routes/beats");
 
 const app = express();
 
@@ -13,6 +14,9 @@ app.use(express.json());
 
 // Rutas de autenticación
 app.use("/api/auth", authRoutes);
+
+// Rutas de beats
+app.use("/api/beats", beatsRoutes);
 
 // Ruta principal para comprobar que el servidor funciona
 app.get("/", (req, res) => {

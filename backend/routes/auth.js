@@ -1,5 +1,6 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const router = express.Router();
 
@@ -147,13 +148,26 @@ router.post("/login", (req, res) => {
         // AUTENTICACIÓN CORRECTA
         // ==================================================
 
+        const token = jwt.sign(
+            {
+                usuario: usuarioEncontrado.usuario,
+                tipo: usuarioEncontrado.tipo
+            },
+            process.env.JWT_SECRET,
+            {
+                expiresIn: "2h"
+            }
+        );
+
         res.json({
 
             mensaje: "Autenticación satisfactoria.",
 
             usuario: usuarioEncontrado.usuario,
 
-            tipo: usuarioEncontrado.tipo
+            tipo: usuarioEncontrado.tipo,
+
+            token: token
 
         });
 
