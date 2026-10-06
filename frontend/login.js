@@ -48,9 +48,12 @@ document.addEventListener("DOMContentLoaded", () => {
             // Login correcto
             alert(`Bienvenido, ${datos.usuario}`);
 
-            // Guardar información del usuario
-            localStorage.setItem("usuario", datos.usuario);
-            localStorage.setItem("tipo", datos.tipo);
+            // Guardar información del usuario en un solo objeto para consistencia
+            localStorage.setItem("usuario", JSON.stringify({
+                usuario: datos.usuario,
+                nombre: datos.usuario,
+                tipo: datos.tipo
+            }));
 
             // Redirigir a la página principal
             window.location.href = "Index-UniqueBeats.html";

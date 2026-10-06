@@ -36,6 +36,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ------------------------
+    // ENLACE ADMIN
+    // ------------------------
+    const adminPanelLink = document.getElementById('adminPanelLink');
+    const usuarioGuardado = obtenerUsuarioGuardado();
+
+    if (adminPanelLink && usuarioGuardado && usuarioGuardado.tipo === 'admin') {
+        adminPanelLink.hidden = false;
+    }
+
 
     // ------------------------
     // LOGIN
@@ -103,7 +113,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Guardamos los datos de sesión
                 localStorage.setItem(
                     'usuario',
-                    JSON.stringify(data)
+                    JSON.stringify({
+                        usuario: data.usuario,
+                        nombre: data.usuario,
+                        tipo: data.tipo
+                    })
                 );
 
 
@@ -137,3 +151,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 });
+
+function obtenerUsuarioGuardado() {
+    const sesion = localStorage.getItem('usuario');
+
+    if (!sesion) return null;
+
+    try {
+        return JSON.parse(sesion);
+    } catch (error) {
+        console.warn('Sesion local invalida. Se limpiara el acceso guardado.', error);
+        localStorage.removeItem('usuario');
+        return null;
+    }
+}

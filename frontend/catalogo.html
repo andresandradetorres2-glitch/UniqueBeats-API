@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Beats 💎 | Unique Beats</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <!-- ========================
+         NAVEGACIÓN
+    ======================== -->
+    <nav class="navbar" role="navigation" aria-label="Navegación principal">
+        <a href="Index-UniqueBeats.html" class="logo" aria-label="Unique Beats - Inicio">UNIQUE<span>BEATS</span> 💎</a>
+        <div class="nav-links" id="navMenu" role="menubar">
+            <a href="Index-UniqueBeats.html" role="menuitem">Inicio</a>
+            <a href="catalogo.html" role="menuitem" class="highlight">Catálogo</a>
+            <a href="Index-UniqueBeats.html#servicios" role="menuitem">Servicios</a>
+            <a href="login.html" role="menuitem">Mi Cuenta</a>
+        </div>
+        <button class="hamburger" id="hamburgerBtn" aria-label="Abrir menú" aria-expanded="false" aria-controls="navMenu">
+            <i class="fas fa-bars"></i>
+        </button>
+    </nav>
+
+    <!-- ========================
+         CABECERA DE CATÁLOGO
+    ======================== -->
+    <header class="hero" style="min-height: 40vh; display: flex; align-items: center; justify-content: center; text-align: center;">
+        <div class="hero-content">
+            <h1 class="section-title" style="margin-bottom: 1rem;">Catálogo de <span class="highlight">Beats</span></h1>
+            <p class="section-subtitle">Encuentra el sonido perfecto para tu próximo hit. Explora nuestra colección exclusiva de instrumentales. 💎</p>
+        </div>
+    </header>
+
+    <!-- ========================
+         FILTROS DE BÚSQUEDA
+    ======================== -->
+    <section class="filters" style="padding: 2rem 1rem; background: rgba(0,0,0,0.3);" aria-labelledby="filters-title">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <h2 id="filters-title" class="section-title" style="text-align: center; font-size: 1.5rem; margin-bottom: 2rem;">Filtrar Sonidos</h2>
+
+            <form class="filter-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; align-items: end;">
+                <!-- Búsqueda -->
+                <div class="filter-group">
+                    <label for="search-beat" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Buscar por nombre</label>
+                    <div style="position: relative;">
+                        <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--accent-color, #00ffff);"></i>
+                        <input type="text" id="search-beat" placeholder="Ej. Alone..." style="width: 100%; padding: 10px 10px 10px 35px; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 5px;">
+                    </div>
+                </div>
+
+                <!-- Género -->
+                <div class="filter-group">
+                    <label for="filter-genre" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Género</label>
+                    <select id="filter-genre" style="width: 100%; padding: 10px; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 5px;">
+                        <option value="">Todos los géneros</option>
+                        <option value="lofi">Lo-fi Hip Hop</option>
+                        <option value="reggaeton">Reggaetón</option>
+                        <option value="trap">Trap</option>
+                        <option value="synthwave">Synthwave</option>
+                        <option value="boombap">Boom Bap</option>
+                        <option value="rnb">R&B</option>
+                        <option value="drill">Drill</option>
+                        <option value="dancehall">Dancehall</option>
+                        <option value="electro">Electronic/Experimental</option>
+                        <option value="pop">Pop</option>
+                        <option value="synthpop">Synthpop</option>
+                        <option value="indie">Indie</option>
+                        <option value="jazz">Jazz</option>
+                        <option value="afrobeat">Afrobeat</option>
+                        <option value="latin">Latin</option>
+                        <option value="bossanova">Bossa Nova</option>
+                    </select>
+                </div>
+
+                <!-- BPM -->
+                <div class="filter-group">
+                    <label for="filter-bpm" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">BPM</label>
+                    <select id="filter-bpm" style="width: 100%; padding: 10px; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 5px;">
+                        <option value="">Cualquier BPM</option>
+                        <option value="slow">Lento (60-90)</option>
+                        <option value="mid">Medio (91-120)</option>
+                        <option value="fast">Rápido (121+)</option>
+                    </select>
+                </div>
+
+                <!-- Licencia -->
+                <div class="filter-group">
+                    <label for="filter-license" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Licencia</label>
+                    <select id="filter-license" style="width: 100%; padding: 10px; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 5px;">
+                        <option value="">Todas las licencias</option>
+                        <option value="basic">Básica (MP3)</option>
+                        <option value="premium">Premium (WAV)</option>
+                        <option value="exclusive">Exclusiva</option>
+                    </select>
+                </div>
+
+                <!-- Precio -->
+                <div class="filter-group">
+                    <label for="filter-price" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Precio Máx.</label>
+                    <input type="number" id="filter-price" placeholder="$0.00" style="width: 100%; padding: 10px; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 5px;">
+                </div>
+
+                <div class="filter-group">
+                    <button type="submit" class="btn btn-primary" style="width: 100%; cursor: pointer;">
+                        <i class="fas fa-filter"></i> Aplicar Filtros
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- ========================
+         GRID DE BEATS
+    ======================== -->
+    <section class="catalog" style="padding: 4rem 1rem;" aria-labelledby="catalog-grid-title">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <h2 class="section-title" id="catalog-grid-title" style="text-align: center;">Explora los <span class="highlight">Beats</span></h2>
+
+            <div class="catalog-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem;">
+
+                <!-- Beat 1 -->
+                <article class="beat-card">
+                    <div class="beat-image">
+                        <i class="fas fa-compact-disc" style="font-size: 4rem; color: var(--accent-color, #00ffff);"></i>
+                        <span class="beat-tag tag-exclusive">Popular</span>
+                    </div>
+                    <div class="beat-info">
+                        <h3>Midnight City</h3>
+                        <p><strong>Género:</strong> Synthwave | <strong>BPM:</strong> 110 | <strong>Tonalidad:</strong> Do m</p>
+                        <p><strong>Licencia:</strong> Premium</p>
+                        <span class="beat-price">$29.99 <span style="font-size: 0.8rem; opacity: 0.7;">USD</span></span>
+                        <div class="beat-actions" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 1rem;">
+                            <a href="#" class="btn-beat btn-buy" title="Escuchar"><i class="fas fa-play"></i></a>
+                            <a href="#" class="btn-beat btn-buy" title="Agregar al carrito"><i class="fas fa-shopping-cart"></i></a>
+                            <a href="#" class="btn-beat btn-buy" title="Ver detalles"><i class="fas fa-info-circle"></i></a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Beat 2 -->
+                <article class="beat-card">
+                    <div class="beat-image">
+                        <i class="fas fa-cloud" style="font-size: 4rem; color: var(--accent-color, #00ffff);"></i>
+                        <span class="beat-tag">Lo-Fi</span>
+                    </div>
+                    <div class="beat-info">
+                        <h3>Cloudy Days</h3>
+                        <p><strong>Género:</strong> Lo-Fi Hip Hop | <strong>BPM:</strong> 85 | <strong>Tonalidad:</strong> Fa maj</p>
+                        <p><strong>Licencia:</strong> Básica</p>
+                        <span class="beat-price">$19.99 <span style="font-size: 0.8rem; opacity: 0.7;">USD</span></span>
+                        <div class="beat-actions" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 1rem;">
+                            <a href="#" class="btn-beat btn-buy" title="Escuchar"><i class="fas fa-play"></i></a>
+                            <a href="#" class="btn-beat btn-buy" title="Agregar al carrito"><i class="fas fa-shopping-cart"></i></a>
+                            <a href="#" class="btn-beat btn-buy" title="Ver detalles"><i class="fas fa-info-circle"></i></a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Beat 3 -->
+                <article class="beat-card">
+                    <div class="beat-image">
+                        <i class="fas fa-fire" style="font-size: 4rem; color: var(--accent-color, #00ffff);"></i>
+                        <span class="beat-tag tag-exclusive">Hot</span>
+                    </div>
+                    <div class="beat-info">
+                        <h3>Street Heat</h3>
+                        <p><strong>Género:</strong> Trap | <strong>BPM:</strong> 140 | <strong>Tonalidad:</strong> Sol m</p>
+                        <p><strong>Licencia:</strong> Exclusiva</p>
+                        <span class="beat-price">$99.99 <span style="font-size: 0.8rem; opacity: 0.7;">USD</span></span>
+                        <div class="beat-actions" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 1rem;">
+                            <a href="#" class="btn-beat btn-buy" title="Escuchar"><i class="fas fa-play"></i></a>
+                            <a href="#" class="btn-beat btn-buy" title="Agregar al carrito"><i class="fas fa-shopping-cart"></i></a>
+                            <a href="#" class="btn-beat btn-buy" title="Ver detalles"><i class="fas fa-info-circle"></i></a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Beat 4 -->
+                <article class="beat-card">
+                    <div class="beat-image">
+                        <i class="fas fa-wave-square" style="font-size: 4rem; color: var(--accent-color, #00ffff);"></i>
+                        <span class="beat-tag">Urban</span>
+                    </div>
+                    <div class="beat-info">
+                        <h3>Neon Nights</h3>
+                        <p><strong>Género:</strong> Reggaetón | <strong>BPM:</strong> 95 | <strong>Tonalidad:</strong> Re m</p>
+                        <p><strong>Licencia:</strong> Premium</p>
+                        <span class="beat-price">$34.99 <span style="font-size: 0.8rem; opacity: 0.7;">USD</span></span>
+                        <div class="beat-actions" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 1rem;">
+                            <a href="#" class="btn-beat btn-buy" title="Escuchar"><i class="fas fa-play"></i></a>
+                            <a href="#" class="btn-beat btn-buy" title="Agregar al carrito"><i class="fas fa-shopping-cart"></i></a>
+                            <a href="#" class="btn-beat btn-buy" title="Ver detalles"><i class="fas fa-info-circle"></i></a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Beat 5 -->
+                <article class="beat-card">
+                    <div class="beat-image">
+                        <i class="fas fa-moon" style="font-size: 4rem; color: var(--accent-color, #00ffff);"></i>
+                        <span class="beat-tag">Deep</span>
+                    </div>
+                    <div class="beat-info">
+                        <h3>Silent Echo</h3>
+                        <p><strong>Género:</strong> Lo-Fi Hip Hop | <strong>BPM:</strong> 78 | <strong>Tonalidad:</strong> La m</p>
+                        <p><strong>Licencia:</strong> Básica</p>
+                        <span class="beat-price">$14.99 <span style="font-size: 0.8rem; opacity: 0.7;">USD</span></span>
+                        <div class="beat-actions" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 1rem;">
+                            <a href="#" class="btn-beat btn-buy" title="Escuchar"><i class="fas fa-play"></i></a>
+                            <a href="#" class="btn-beat btn-buy" title="Agregar al carrito"><i class="fas fa-shopping-cart"></i></a>
+                            <a href="#" class="btn-beat btn-buy" title="Ver detalles"><i class="fas fa-info-circle"></i></a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Beat 6 -->
+                <article class="beat-card">
+                    <div class="beat-image">
+                        <i class="fas fa-bolt" style="font-size: 4rem; color: var(--accent-color, #00ffff);"></i>
+                        <span class="beat-tag tag-exclusive">Exclusive</span>
+                    </div>
+                    <div class="beat-info">
+                        <h3>Thunder Strike</h3>
+                        <p><strong>Género:</strong> Trap | <strong>BPM:</strong> 155 | <strong>Tonalidad:</strong> Mi m</p>
+                        <p><strong>Licencia:</strong> Exclusiva</p>
+                        <span class="beat-price">$120.00 <span style="font-size: 0.8rem; opacity: 0.7;">USD</span></span>
+                        <div class="beat-actions" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 1rem;">
+                            <a href="#" class="btn-beat btn-buy" title="Escuchar"><i class="fas fa-play"></i></a>
+                            <a href="#" class="btn-beat btn-buy" title="Agregar al carrito"><i class="fas fa-shopping-cart"></i></a>
+                            <a href="#" class="btn-beat btn-buy" title="Ver detalles"><i class="fas fa-info-circle"></i></a>
+                        </div>
+                    </div>
+                </article>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================
+         SOLICITUD PERSONALIZADA
+    ======================== -->
+    <section class="services" style="padding: 4rem 1rem; background: rgba(0,0,0,0.2);" aria-labelledby="custom-beat-title">
+        <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+            <h2 class="section-title" id="custom-beat-title">¿Buscas algo <span class="highlight">Único</span>?</h2>
+            <p class="section-subtitle" style="margin-bottom: 2rem;">Si no encuentras lo que buscas, puedo crear un beat totalmente personalizado para tu visión artística.</p>
+            <a href="mailto:homosynthmusic@gmail.com?subject=Solicitud%20de%20Beat%20Personalizado" class="btn btn-primary" style="font-size: 1.2rem; padding: 1rem 2rem;">
+                <i class="fas fa-envelope"></i> Solicitar Beat Personalizado
+            </a>
+        </div>
+    </section>
+
+    <!-- ========================
+         FOOTER
+    ======================== -->
+    <footer role="contentinfo">
+        <div class="brand">UNIQUE<span>BEATS</span> 💎</div>
+        <p>I'm Synth — Producer & Sound Designer</p>
+        <p>Classy rhythm • Soulful tones • Unapologetically authentic</p>
+        <div class="social-links">
+            <a href="https://instagram.com/uniquebeats.wav" aria-label="Instagram" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+            <a href="https://beatstars.com/uniquebeatsbysynth" aria-label="Beatstars" target="_blank" rel="noopener noreferrer"><i class="fas fa-store"></i></a>
+            <a href="https://paypal.me/HomoSynthMusic" aria-label="PayPal" target="_blank" rel="noopener noreferrer"><i class="fab fa-paypal"></i></a>
+            <a href="https://youtube.com/@HomoSynthMusic" aria-label="YouTube" target="_blank" rel="noopener noreferrer"><i class="fab fa-youtube"></i></a>
+        </div>
+        <p class="copyright">© 2026 Synth Artista / Homosynth — Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="catalogo.js"></script>
+</body>
+
+</html>

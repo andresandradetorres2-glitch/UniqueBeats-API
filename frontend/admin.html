@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel 💎 | Unique Beats</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Estilos específicos para el layout de Admin ya que no podemos tocar styles.css */
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+            color: white;
+        }
+        .admin-sidebar {
+            width: 260px;
+            background: #0a0a0a;
+            border-right: 1px solid #333;
+            padding: 2rem 1rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .admin-sidebar .logo {
+            display: block;
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 1.5rem;
+        }
+        .admin-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .admin-nav a {
+            padding: 12px 15px;
+            color: #ccc;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .admin-nav a:hover, .admin-nav a.active {
+            background: rgba(0, 255, 255, 0.1);
+            color: #00ffff;
+        }
+        .admin-main {
+            margin-left: 260px;
+            flex: 1;
+            padding: 2rem;
+            background: #121212;
+        }
+        .admin-section {
+            margin-bottom: 4rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #333;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: #1a1a1a;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #333;
+            text-align: center;
+        }
+        .stat-card i {
+            font-size: 2rem;
+            color: #00ffff;
+            margin-bottom: 1rem;
+        }
+        .stat-card h3 {
+            font-size: 2rem;
+            margin: 0.5rem 0;
+        }
+        .stat-card p {
+            color: #888;
+            margin: 0;
+        }
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            background: #1a1a1a;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .admin-table th, .admin-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #333;
+        }
+        .admin-table th {
+            background: #222;
+            color: #00ffff;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+        .admin-table tr:hover {
+            background: rgba(255,255,255,0.05);
+        }
+        .btn-action {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-right: 5px;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-edit { background: #ffc107; color: black; }
+        .btn-hide { background: #6c757d; color: white; }
+        .btn-delete { background: #dc3545; color: white; }
+
+        .admin-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            background: #1a1a1a;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid #333;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .form-group label {
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 10px;
+            background: #0a0a0a;
+            border: 1px solid #444;
+            color: white;
+            border-radius: 5px;
+        }
+        .full-width {
+            grid-column: 1 / -1;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="admin-container">
+        <!-- ========================
+             SIDEBAR DE ADMINISTRADOR
+        ======================== -->
+        <aside class="admin-sidebar">
+            <a href="Index-UniqueBeats.html" class="logo">UNIQUE<span style="color:#00ffff">BEATS</span> 💎</a>
+            <nav class="admin-nav">
+                <a href="#resumen" class="active"><i class="fas fa-chart-line"></i> Resumen General</a>
+                <a href="#gestion-beats"><i class="fas fa-music"></i> Gestión de Beats</a>
+                <a href="#nuevo-beat"><i class="fas fa-plus-circle"></i> Nuevo Beat</a>
+                <a href="#publicaciones"><i class="fas fa-bullhorn"></i> Publicaciones</a>
+                <a href="#video-destacado"><i class="fas fa-video"></i> Video Destacado</a>
+                <a href="#solicitudes"><i class="fas fa-envelope-open-text"></i> Solicitudes</a>
+                <a href="#ordenes"><i class="fas fa-shopping-bag"></i> Órdenes</a>
+                <hr style="border: 0; border-top: 1px solid #333; margin: 1rem 0;">
+                <a href="Index-UniqueBeats.html" style="color: #ff4444;"><i class="fas fa-sign-out-alt"></i> Salir del Panel</a>
+            </nav>
+        </aside>
+
+        <!-- ========================
+             CONTENIDO PRINCIPAL
+        ======================== -->
+        <main class="admin-main">
+            <h1 class="section-title" style="margin-bottom: 2rem;">Panel de <span class="highlight">Administrador</span></h1>
+            <p id="adminName" class="section-subtitle" style="margin-bottom: 2rem;"></p>
+
+            <!-- SECCIÓN: RESUMEN GENERAL -->
+            <section id="resumen" class="admin-section">
+                <h2 style="margin-bottom: 1.5rem;"><i class="fas fa-chart-pie"></i> Resumen General</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-music"></i>
+                        <h3>42</h3>
+                        <p>Beats Publicados</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-clock"></i>
+                        <h3>12</h3>
+                        <p>Solicitudes Pendientes</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-dollar-sign"></i>
+                        <h3>$1,250</h3>
+                        <p>Ventas del Mes</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-users"></i>
+                        <h3>156</h3>
+                        <p>Usuarios Registrados</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓN: GESTIÓN DE BEATS -->
+            <section id="gestion-beats" class="admin-section">
+                <h2 style="margin-bottom: 1.5rem;"><i class="fas fa-list"></i> Gestión de Beats</h2>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Género</th>
+                            <th>BPM</th>
+                            <th>Precio</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Midnight City</td>
+                            <td>Synthwave</td>
+                            <td>110</td>
+                            <td>$29.99</td>
+                            <td><span style="color: #00ff00;">Publicado</span></td>
+                            <td>
+                                <button class="btn-action btn-edit">Editar</button>
+                                <button class="btn-action btn-hide">Ocultar</button>
+                                <button class="btn-action btn-delete">Eliminar</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Cloudy Days</td>
+                            <td>Lo-Fi</td>
+                            <td>85</td>
+                            <td>$19.99</td>
+                            <td><span style="color: #00ff00;">Publicado</span></td>
+                            <td>
+                                <button class="btn-action btn-edit">Editar</button>
+                                <button class="btn-action btn-hide">Ocultar</button>
+                                <button class="btn-action btn-delete">Eliminar</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Dark Soul</td>
+                            <td>Trap</td>
+                            <td>130</td>
+                            <td>$49.99</td>
+                            <td><span style="color: #ffcc00;">Borrador</span></td>
+                            <td>
+                                <button class="btn-action btn-edit">Editar</button>
+                                <button class="btn-action btn-hide">Ocultar</button>
+                                <button class="btn-action btn-delete">Eliminar</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- SECCIÓN: NUEVO BEAT -->
+            <section id="nuevo-beat" class="admin-section">
+                <h2 style="margin-bottom: 1.5rem;"><i class="fas fa-plus-circle"></i> Subir Nuevo Beat</h2>
+                <form class="admin-form">
+                    <div class="form-group">
+                        <label>Nombre del Beat</label>
+                        <input type="text" placeholder="Ej. Neon Dreams">
+                    </div>
+                    <div class="form-group">
+                        <label>Género</label>
+                        <select>
+                            <option>Trap</option>
+                            <option>Lo-Fi</option>
+                            <option>Reggaetón</option>
+                            <option>Synthwave</option>
+                            <option>Boom Bap</option>
+                            <option>R&B</option>
+                            <option>Drill</option>
+                            <option>Dancehall</option>
+                            <option>Electronic/Experimental</option>
+                            <option>Pop</option>
+                            <option>Synthpop</option>
+                            <option>Indie</option>
+                            <option>Jazz</option>
+                            <option>Afrobeat</option>
+                            <option>Latin</option>
+                            <option>Bossa Nova</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>BPM</label>
+                        <input type="number" placeholder="120">
+                    </div>
+                    <div class="form-group">
+                        <label>Tonalidad</label>
+                        <input type="text" placeholder="Do m">
+                    </div>
+                    <div class="form-group">
+                        <label>Precio ($)</label>
+                        <input type="number" step="0.01" placeholder="29.99">
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo de Licencia</label>
+                        <select>
+                            <option>Básica</option>
+                            <option>Premium</option>
+                            <option>Exclusiva</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Link de YouTube</label>
+                        <input type="url" placeholder="https://youtube.com/watch?v=...">
+                    </div>
+                    <div class="form-group">
+                        <label>Miniatura (Imagen)</label>
+                        <input type="file" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label>Archivo de Audio</label>
+                        <input type="file" accept="audio/*">
+                    </div>
+                    <div class="form-group">
+                        <label>Estado</label>
+                        <select>
+                            <option>Publicado</option>
+                            <option>Borrador</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Descripción</label>
+                        <textarea rows="4" placeholder="Describe la vibra del beat..."></textarea>
+                    </div>
+                    <div class="full-width" style="text-align: right;">
+                        <button type="submit" class="btn btn-primary" style="padding: 12px 30px; cursor: pointer;">Guardar Beat 💎</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- SECCIÓN: VIDEO DESTACADO -->
+            <section id="video-destacado" class="admin-section">
+                <h2 style="margin-bottom: 1.5rem;"><i class="fas fa-video"></i> Video Destacado de la Home</h2>
+                <div class="admin-form" style="grid-template-columns: 1fr auto;">
+                    <div class="form-group">
+                        <label>URL de YouTube del Video Principal</label>
+                        <input type="url" placeholder="https://www.youtube.com/embed/...">
+                    </div>
+                    <div class="form-group" style="justify-content: flex-end;">
+                        <button class="btn btn-primary" style="cursor: pointer;">Actualizar Video</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓN: SOLICITUDES PERSONALIZADAS -->
+            <section id="solicitudes" class="admin-section">
+                <h2 style="margin-bottom: 1.5rem;"><i class="fas fa-envelope-open-text"></i> Solicitudes de Beats Personalizados</h2>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Género Deseado</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Juan Pérez</td>
+                            <td>Dark Trap</td>
+                            <td>2026-10-01</td>
+                            <td><span style="color: #ffcc00;">Pendiente</span></td>
+                            <td><a href="#" class="btn-action btn-edit">Responder</a></td>
+                        </tr>
+                        <tr>
+                            <td>Maria Luna</td>
+                            <td>Soulful Lo-fi</td>
+                            <td>2026-09-28</td>
+                            <td><span style="color: #00ff00;">En Proceso</span></td>
+                            <td><a href="#" class="btn-action btn-edit">Responder</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- SECCIÓN: ÓRDENES RECIENTES -->
+            <section id="ordenes" class="admin-section">
+                <h2 style="margin-bottom: 1.5rem;"><i class="fas fa-shopping-bag"></i> Órdenes Recientes</h2>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID Orden</th>
+                            <th>Beat</th>
+                            <th>Cliente</th>
+                            <th>Total</th>
+                            <th>Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#UB-1001</td>
+                            <td>Midnight City</td>
+                            <td>Alex Smith</td>
+                            <td>$29.99</td>
+                            <td>2026-10-04</td>
+                        </tr>
+                        <tr>
+                            <td>#UB-1002</td>
+                            <td>Cloudy Days</td>
+                            <td>Sara Connor</td>
+                            <td>$19.99</td>
+                            <td>2026-10-03</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+
+</html>

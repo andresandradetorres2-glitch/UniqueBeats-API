@@ -12,8 +12,8 @@ const db = require("../database");
 
 router.post("/register", async (req, res) => {
 
-    // Recibir los datos enviados desde el frontend
-    const { usuario, password, tipo } = req.body;
+    // No se acepta el tipo desde el cliente. El backend lo fuerza siempre a usuario.
+    const { usuario, password } = req.body;
 
     // Validar que los campos obligatorios estén completos
     if (!usuario || !password) {
@@ -22,8 +22,7 @@ router.post("/register", async (req, res) => {
         });
     }
 
-    // Si no se especifica tipo, se crea como usuario normal
-    const tipoUsuario = tipo || "usuario";
+    const tipoUsuario = "usuario";
 
     try {
 
