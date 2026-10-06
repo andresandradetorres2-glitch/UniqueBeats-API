@@ -3,6 +3,7 @@ const cors = require("cors");
 
 const authRoutes = require("./routes/auth");
 const beatsRoutes = require("./routes/beats");
+const verificarToken = require("./middleware/authMiddleware");
 
 const app = express();
 
