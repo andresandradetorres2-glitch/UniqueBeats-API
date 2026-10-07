@@ -1,75 +1,66 @@
 // ================================
 // CATALOGO DE BEATS
-// Base temporal hasta conectar backend
+// Conectado al Backend Real
 // ================================
 
-const beatsDemo = [
-    {
-        nombre: "Midnight City",
-        genero: "synthwave",
-        bpm: 110,
-        tonalidad: "Do m",
-        licencia: "premium",
-        precio: 29.99,
-        etiqueta: "Popular",
-        icono: "compact-disc"
-    },
-    {
-        nombre: "Cloudy Days",
-        genero: "lofi",
-        bpm: 85,
-        tonalidad: "Fa maj",
-        licencia: "basic",
-        precio: 19.99,
-        etiqueta: "Lo-Fi",
-        icono: "cloud"
-    },
-    {
-        nombre: "Street Heat",
-        genero: "trap",
-        bpm: 140,
-        tonalidad: "Sol m",
-        licencia: "exclusive",
-        precio: 99.99,
-        etiqueta: "Hot",
-        icono: "fire"
-    },
-    {
-        nombre: "Neon Nights",
-        genero: "reggaeton",
-        bpm: 95,
-        tonalidad: "Re m",
-        licencia: "premium",
-        precio: 34.99,
-        etiqueta: "Urban",
-        icono: "wave-square"
-    },
-    {
-        nombre: "Silent Echo",
-        genero: "lofi",
-        bpm: 78,
-        tonalidad: "La m",
-        licencia: "basic",
-        precio: 14.99,
-        etiqueta: "Deep",
-        icono: "moon"
-    },
-    {
-        nombre: "Thunder Strike",
-        genero: "trap",
-        bpm: 155,
-        tonalidad: "Mi m",
-        licencia: "exclusive",
-        precio: 120,
-        etiqueta: "Exclusive",
-        icono: "bolt"
-    }
-];
+// Objeto global para controlar el audio actual
+const audioPlayer = {
+    currentAudio: null,
+    currentBeatId: null,
+    isPlaying: false
+};
 
 document.addEventListener("DOMContentLoaded", () => {
     prepararFiltrosCatalogo();
-    renderizarCatalogoDemoSiExiste();
+    cargarBeatsDesdeAPI();
+    configurarModal();
 });
+
+async function cargarBeatsDesdeAPI() {
+    const contenedor = document.getElementById("beatsCatalog");
+    if (!contenedor) return;
+
+    // Estado de carga
+    contenedor.innerHTML = `
+        <div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: white;">
+            <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: #00ffff;"></i>
+            <p style="margin-top: 1rem; font-size: 1.2rem;">Cargando beats... 💎</p>
+        </div>
+    `;
+
+    try {
+        const respuesta = await fetch("http://localhost:3002/api/beats");
+
+        if (!respuesta.ok) {
+            throw new Error("No se pudo conectar con el servidor de beats.");
+        }
+
+        const beats = await respuesta.json();
+
+        if (beats.length === 0) {
+            contenedor.innerHTML = `
+                <div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: white;">
+                    <i class="fas fa-music-slash" style="font-size: 3rem; color: #555;"></i>
+                    <p style="margin-top: 1rem; font-size: 1.2rem;">No hay beats disponibles en este momento.</p>
+                </div>
+            `;
+            return;
+        }
+
+        // Renderizar los beats reales
+        contenedor.innerHTML = beats.map(beat => crearBeatCard(beat)).join("");
+
+    } catch (error) {
+        console.error("Error cargando catálogo:", error);
+        contenedor.innerHTML = `
+            <div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: white;">
+                <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #ff4444;"></i>
+                <p style="margin-top: 1rem; font-size: 1.2rem;">Error al cargar los beats. Por favor, intenta más tarde.</p>
+                <button onclick="cargarBeatsDesdeAPI()" class="btn btn-primary" style="margin-top: 1rem; cursor: pointer; padding: 10px 20px;">Reintentar</button>
+            </div>
+        `;
+    }
+}
 
 function prepararFiltrosCatalogo() {
     const formulario = document.querySelector(".filter-container");
@@ -105,38 +96,344 @@ function filtrarCardsExistentes() {
     });
 }
 
-function renderizarCatalogoDemoSiExiste() {
-    const contenedor = document.getElementById("beatsCatalog");
-
-    if (!contenedor) return;
-
-    contenedor.innerHTML = beatsDemo.map(crearBeatCard).join("");
-}
-
 function crearBeatCard(beat) {
+    const titulo = beat.titulo || "Sin título";
+    const genero = beat.genero || "N/A";
+    const bpm = beat.bpm || "0";
+    const tonalidad = beat.tonalidad || "N/A";
+    const licencia = beat.licencia || "No especificada";
+    const precio = beat.precio ? parseFloat(beat.precio).toFixed(2) : "0.00";
+
+    const infoVisual = obtenerInfoVisual(genero);
+    const beatData = btoa(unescape(encodeURIComponent(JSON.stringify(beat))));
+
     return `
-        <article class="beat-card">
+        <article class="beat-card" id="beat-${beat.id}">
             <div class="beat-image">
-                <i class="fas fa-${beat.icono}" style="font-size: 4rem; color: var(--accent-color, #00ffff);"></i>
-                <span class="beat-tag">${beat.etiqueta}</span>
+                ${beat.miniatura_url
+                    ? `<img src="${beat.miniatura_url}" alt="${titulo}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px;" onerror="this.src='assets/img/placeholder-beat.jpg';">`
+                    : `<i class="fas fa-${infoVisual.icono}" style="font-size: 4rem; color: var(--accent-color, #00ffff);"></i>`
+                }
+                <span class="beat-tag">${infoVisual.etiqueta}</span>
             </div>
+            <div id="player-container-${beat.id}" style="display: none;"></div>
             <div class="beat-info">
-                <h3>${beat.nombre}</h3>
-                <p><strong>Genero:</strong> ${beat.genero} | <strong>BPM:</strong> ${beat.bpm} | <strong>Tonalidad:</strong> ${beat.tonalidad}</p>
-                <p><strong>Licencia:</strong> ${beat.licencia}</p>
-                <span class="beat-price">$${beat.precio.toFixed(2)} <span style="font-size: 0.8rem; opacity: 0.7;">USD</span></span>
+                <h3>${titulo}</h3>
+                <p><strong>Genero:</strong> ${genero} | <strong>BPM:</strong> ${bpm} | <strong>Tonalidad:</strong> ${tonalidad}</p>
+                <p><strong>Licencia:</strong> ${licencia}</p>
+                <span class="beat-price">$${precio} <span style="font-size: 0.8rem; opacity: 0.7;">USD</span></span>
                 <div class="beat-actions" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 1rem;">
-                    <a href="#" class="btn-beat btn-buy" title="Escuchar"><i class="fas fa-play"></i></a>
+                    <button onclick="togglePlayBeat(${beat.id}, '${beat.audio_preview_url || ''}')" class="btn-beat btn-buy" title="Reproducir/Pausar" id="play-btn-${beat.id}">
+                        <i class="fas fa-play"></i>
+                    </button>
                     <a href="#" class="btn-beat btn-buy" title="Agregar al carrito"><i class="fas fa-shopping-cart"></i></a>
-                    <a href="#" class="btn-beat btn-buy" title="Ver detalles"><i class="fas fa-info-circle"></i></a>
+                    <a href="javascript:void(0)" onclick="abrirDetallesBeat('${beatData}')" class="btn-beat btn-buy" title="Ver detalles"><i class="fas fa-info-circle"></i></a>
                 </div>
             </div>
         </article>
     `;
 }
 
+function obtenerInfoVisual(genero) {
+    const map = {
+        "Trap": { icono: "fire", etiqueta: "Hot" },
+        "Lo-Fi": { icono: "cloud", etiqueta: "Chill" },
+        "Synthwave": { icono: "compact-disc", etiqueta: "Retro" },
+        "Reggaetón": { icono: "wave-square", etiqueta: "Urban" },
+        "Boom Bap": { icono: "drum", etiqueta: "Classic" },
+        "R&B": { icono: "heart", etiqueta: "Smooth" },
+        "Drill": { icono: "bolt", etiqueta: "Hard" }
+    };
+    return map[genero] || { icono: "music", etiqueta: "Beat" };
+}
+
+// ======================================================
+// LÓGICA DEL REPRODUCTOR DE AUDIO
+// ======================================================
+
+function formatTime(seconds) {
+    const min = Math.floor(seconds / 60);
+    const sec = Math.floor(seconds % 60);
+    return `${min}:${sec < 10 ? '0' : ''}${sec}`;
+}
+
+function updateProgressBar(beatId) {
+    const audio = audioPlayer.currentAudio;
+    if (!audio || audioPlayer.currentBeatId !== beatId) return;
+
+    const progressFill = document.getElementById(`progress-fill-${beatId}`);
+    const timeCurrent = document.getElementById(`time-current-${beatId}`);
+    const timeTotal = document.getElementById(`time-total-${beatId}`);
+
+    if (progressFill) {
+        const percent = (audio.currentTime / audio.duration) * 100;
+        progressFill.style.width = `${percent}%`;
+    }
+    if (timeCurrent) {
+        timeCurrent.textContent = formatTime(audio.currentTime);
+    }
+    if (timeTotal && !isNaN(audio.duration)) {
+        timeTotal.textContent = formatTime(audio.duration);
+    }
+}
+
+function seekAudio(beatId, percent) {
+    if (audioPlayer.currentAudio && audioPlayer.currentBeatId === beatId) {
+        const newTime = (percent / 100) * audioPlayer.currentAudio.duration;
+        audioPlayer.currentAudio.currentTime = newTime;
+    }
+}
+
+function togglePlayBeat(beatId, audioUrl) {
+    if (!audioUrl) {
+        alert("Este beat no tiene un audio de vista previa disponible.");
+        return;
+    }
+
+    if (audioPlayer.currentBeatId === beatId) {
+        if (audioPlayer.isPlaying) {
+            audioPlayer.currentAudio.pause();
+            audioPlayer.isPlaying = false;
+            actualizarIconoPlay(beatId, "fa-play");
+            // El reproductor ya NO se oculta aquí para mejorar la UX
+        } else {
+            audioPlayer.currentAudio.play();
+            audioPlayer.isPlaying = true;
+            actualizarIconoPlay(beatId, "fa-pause");
+        }
+        return;
+    }
+
+    if (audioPlayer.currentAudio) {
+        audioPlayer.currentAudio.pause();
+        actualizarIconoPlay(audioPlayer.currentBeatId, "fa-play");
+        ocultarMiniReproductor(audioPlayer.currentBeatId);
+    }
+
+    const audio = new Audio(audioUrl);
+
+    audio.play();
+
+    audio.ontimeupdate = () => updateProgressBar(beatId);
+    audio.onended = () => {
+        audioPlayer.isPlaying = false;
+        actualizarIconoPlay(beatId, "fa-play");
+        ocultarMiniReproductor(beatId);
+    };
+
+    audioPlayer.currentAudio = audio;
+    audioPlayer.currentBeatId = beatId;
+    audioPlayer.isPlaying = true;
+
+    actualizarIconoPlay(beatId, "fa-pause");
+    mostrarMiniReproductor(beatId, audioUrl);
+}
+
+function mostrarMiniReproductor(beatId, audioUrl) {
+    const container = document.getElementById(`player-container-${beatId}`);
+    if (!container) return;
+
+    container.innerHTML = `
+        <div class="mini-player">
+            <div class="player-top-row">
+                <div class="player-controls">
+                    <button onclick="seekAudioRelative(${beatId}, -5)" class="player-btn" title="Retroceder 5s">
+                        <i class="fas fa-backward"></i>
+                    </button>
+                    <button onclick="togglePlayBeat(${beatId}, '${audioUrl}')" class="player-btn" id="mini-play-btn-${beatId}">
+                        <i class="fas ${audioPlayer.isPlaying ? 'fa-pause' : 'fa-play'}"></i>
+                    </button>
+                    <button onclick="seekAudioRelative(${beatId}, 5)" class="player-btn" title="Adelantar 5s">
+                        <i class="fas fa-forward"></i>
+                    </button>
+                </div>
+                <div class="volume-container">
+                    <button onclick="toggleMute(${beatId})" class="player-btn" id="mute-btn-${beatId}">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                    <input type="range" min="0" max="1" step="0.1" value="1"
+                           oninput="setVolume(${beatId}, this.value)"
+                           class="volume-slider-vertical">
+                </div>
+            </div>
+            <div class="progress-container">
+                <span id="time-current-${beatId}">${formatTime(audioPlayer.currentAudio ? audioPlayer.currentAudio.currentTime : 0)}</span>
+                <div class="progress-bar-bg"
+                     onclick="handleProgressClick(event, ${beatId})"
+                     onmousemove="showTooltip(event, ${beatId})"
+                     onmouseout="hideTooltip(${beatId})">
+                    <div class="progress-bar-fill" id="progress-fill-${beatId}"></div>
+                    <div id="tooltip-${beatId}" class="progress-tooltip">0:00</div>
+                </div>
+                <span id="time-total-${beatId}">${formatTime(audioPlayer.currentAudio ? audioPlayer.currentAudio.duration : 0)}</span>
+            </div>
+        </div>
+    `;
+    container.style.display = "block";
+}
+
+function ocultarMiniReproductor(beatId) {
+    const container = document.getElementById(`player-container-${beatId}`);
+    if (container) {
+        container.style.display = "none";
+        container.innerHTML = "";
+    }
+}
+
+function handleProgressClick(event, beatId) {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const width = rect.width;
+    const percent = (x / width) * 100;
+    seekAudio(beatId, percent);
+}
+
+function seekAudioRelative(beatId, delta) {
+    if (audioPlayer.currentAudio && audioPlayer.currentBeatId === beatId) {
+        audioPlayer.currentAudio.currentTime += delta;
+    }
+}
+
+function setVolume(beatId, value) {
+    if (audioPlayer.currentAudio && audioPlayer.currentBeatId === beatId) {
+        audioPlayer.currentAudio.volume = value;
+    }
+}
+
+function toggleMute(beatId) {
+    if (audioPlayer.currentAudio && audioPlayer.currentBeatId === beatId) {
+        const audio = audioPlayer.currentAudio;
+        audio.muted = !audio.muted;
+        const btn = document.getElementById(`mute-btn-${beatId}`);
+        if (btn) {
+            btn.querySelector('i').className = audio.muted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
+        }
+    }
+}
+
+function showTooltip(event, beatId) {
+    if (!audioPlayer.currentAudio || audioPlayer.currentBeatId !== beatId) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const width = rect.width;
+    const percent = x / width;
+    const time = percent * audioPlayer.currentAudio.duration;
+
+    const tooltip = document.getElementById(`tooltip-${beatId}`);
+    if (tooltip) {
+        tooltip.textContent = formatTime(time);
+        tooltip.style.left = `${(percent * 100) - 2}%`;
+        tooltip.style.display = "block";
+    }
+}
+
+function hideTooltip(beatId) {
+    const tooltip = document.getElementById(`tooltip-${beatId}`);
+    if (tooltip) tooltip.style.display = "none";
+}
+
+function actualizarIconoPlay(beatId, icono) {
+    const btn = document.getElementById(`play-btn-${beatId}`);
+    if (btn) {
+        const i = btn.querySelector('i');
+        if (i) {
+            i.className = `fas ${icono}`;
+        }
+    }
+}
+
+function abrirDetallesBeat(base64Beat) {
+    try {
+        const beat = JSON.parse(decodeURIComponent(escape(atob(base64Beat))));
+        const modal = document.getElementById("beatModal");
+        const modalBody = document.getElementById("modalBody");
+
+        if (!modal || !modalBody) return;
+
+        const titulo = beat.titulo || "Sin título";
+        const genero = beat.genero || "N/A";
+        const bpm = beat.bpm || "0";
+        const tonalidad = beat.tonalidad || "N/A";
+        const licencia = beat.licencia || "No especificada";
+        const precio = beat.precio ? parseFloat(beat.precio).toFixed(2) : "0.00";
+        const moneda = beat.moneda || "USD";
+        const estado = beat.estado || "No especificado";
+        const descripcion = beat.descripcion || "Sin descripción disponible.";
+
+        modalBody.innerHTML = `
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <h2 class="section-title" style="font-size: 2rem; margin-bottom: 0.5rem;">${titulo}</h2>
+                <span class="beat-tag" style="font-size: 0.9rem; padding: 5px 15px; border-radius: 20px; background: rgba(0,255,255,0.1); color: #00ffff; border: 1px solid #00ffff;">${estado.toUpperCase()}</span>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; font-size: 1.1rem;">
+                <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                    <p><strong style="color: #00ffff;">Género:</strong> ${genero}</p>
+                    <p><strong style="color: #00ffff;">BPM:</strong> ${bpm}</p>
+                    <p><strong style="color: #00ffff;">Tonalidad:</strong> ${tonalidad}</p>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                    <p><strong style="color: #00ffff;">Licencia:</strong> ${licencia}</p>
+                    <p><strong style="color: #00ffff;">Precio:</strong> ${precio} ${moneda}</p>
+                    <p><strong style="color: #00ffff;">Estado:</strong> ${estado}</p>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 2rem; padding: 1.5rem; background: rgba(0,0,0,0.3); border-radius: 15px; border-left: 4px solid #00ffff;">
+                <h3 style="font-size: 1.1rem; margin-bottom: 0.8rem; color: #00ffff;"><i class="fas fa-align-left"></i> Descripción</h3>
+                <p style="line-height: 1.6; color: #ccc; font-style: italic;">"${descripcion}"</p>
+            </div>
+
+            <div style="text-align: center; display: flex; justify-content: center; gap: 15px;">
+                ${beat.audio_preview_url ? `
+                    <button onclick="togglePlayBeat(${beat.id}, '${beat.audio_preview_url}')" class="btn btn-primary" style="padding: 12px 20px; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; font-weight: bold;">
+                        <i class="fas fa-play"></i> Reproducir Preview
+                    </button>
+                ` : ''}
+                ${beat.youtube_url ? `
+                    <a href="${beat.youtube_url}" target="_blank" class="btn btn-primary" style="padding: 12px 20px; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; font-weight: bold; cursor: pointer;">
+                        <i class="fab fa-youtube"></i> Ver en YouTube
+                    </a>
+                ` : ''}
+            </div>
+        `;
+
+        modal.style.display = "flex";
+    } catch (error) {
+        console.error("Error al abrir detalles del beat:", error);
+    }
+}
+
+function cerrarModal() {
+    const modal = document.getElementById("beatModal");
+    if (modal) modal.style.display = "none";
+}
+
+function configurarModal() {
+    const closeBtn = document.getElementById("closeModal");
+    const modal = document.getElementById("beatModal");
+
+    if (closeBtn) {
+        closeBtn.addEventListener("click", cerrarModal);
+    }
+
+    if (modal) {
+        modal.addEventListener("click", (event) => {
+            if (event.target === modal) {
+                cerrarModal();
+            }
+        });
+    }
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+                cerrarModal();
+            }
+    });
+}
+
 function obtenerValor(id) {
-    const elemento = document.getElementById(id);
+    const elemento = document.getElementById("search-beat");
     return elemento ? elemento.value.trim() : "";
 }
 
@@ -156,7 +453,7 @@ function normalizarTexto(texto) {
 }
 
 function coincideRangoBpm(texto, rango) {
-    const resultado = texto.match(/bpm:\s*(\d+)/i);
+    const resultado = texto.match(/bpm:\s*(\d+)/);
     const bpm = resultado ? Number(resultado[1]) : 0;
 
     if (!bpm) return true;
