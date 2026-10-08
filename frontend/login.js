@@ -38,6 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Convertir respuesta a JSON
             const datos = await respuesta.json();
+            console.log("Respuesta del servidor login:", datos); // Debug para verificar el token en consola
 
             // Si las credenciales son incorrectas
             if (!respuesta.ok) {
@@ -45,15 +46,25 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
+            if (!datos.token) {
+                console.error("El servidor no devolvió un token JWT.");
+                alert("Error crítico: El servidor no proporcionó un token de acceso.");
+                return;
+            }
+
             // Login correcto
             alert(`Bienvenido, ${datos.usuario}`);
 
-            // Guardar información del usuario en un solo objeto para consistencia
-            localStorage.setItem("usuario", JSON.stringify({
+            // Guardar información del usuario y el token para consistencia
+            const datosSesion = {
                 usuario: datos.usuario,
                 nombre: datos.usuario,
-                tipo: datos.tipo
-            }));
+                tipo: datos.tipo,
+                token: datos.token
+            };
+
+            localStorage.setItem("usuario", JSON.stringify(datosSesion));
+            console.log("Sesión guardada en localStorage:", datosSesion);
 
             // Redirigir a la página principal
             window.location.href = "Index-UniqueBeats.html";

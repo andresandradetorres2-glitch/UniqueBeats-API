@@ -1,17 +1,23 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 
 const authRoutes = require("./routes/auth");
 const beatsRoutes = require("./routes/beats");
 const verificarToken = require("./middleware/authMiddleware");
 
 const app = express();
+console.log("CWD:", process.cwd());
+
 
 // Permitir peticiones desde el frontend
 app.use(cors());
 
 // Permitir recibir datos en formato JSON
 app.use(express.json());
+
+// Servir archivos estáticos de la carpeta uploads
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Rutas de autenticación
 app.use("/api/auth", authRoutes);
@@ -28,6 +34,14 @@ app.get("/", (req, res) => {
 
 // Iniciar servidor
 const PORT = 3002;
+
+app.use((err, req, res, next) => {
+    console.error("Global Error Handler:", err);
+    res.status(err.status || 500).json({
+        mensaje: err.message || "Error interno del servidor",
+        error: err
+    });
+});
 
 app.listen(PORT, () => {
     console.log(`Servidor ejecutándose en http://localhost:${PORT}`);

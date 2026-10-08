@@ -1,3 +1,10 @@
 node_modules/
 .env
 Registro de Tareas ADSO.xlsm
+
+# Archivos multimedia subidos por los usuarios
+backend/uploads/
+
+# Archivos de prueba
+backend/dummy_audio.mp3
+backend/dummy_img.jpg

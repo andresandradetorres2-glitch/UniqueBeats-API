@@ -2,6 +2,13 @@ const express = require("express");
 const router = express.Router();
 const db = require("../database");
 const verificarAdmin = require("../middleware/adminMiddleware");
+const upload = require("../middleware/uploadMiddleware");
+
+// Middleware para manejar la subida de archivos en la ruta de creación y actualización
+const uploadBeats = upload.fields([
+    { name: 'miniatura', maxCount: 1 },
+    { name: 'audio_preview', maxCount: 1 }
+]);
 
 // ======================================================
 // OBTENER TODOS LOS BEATS
@@ -59,7 +66,13 @@ router.get("/:id", (req, res) => {
 // CREAR UN NUEVO BEAT
 // Solo administrador
 // ======================================================
-router.post("/", verificarAdmin, (req, res) => {
+router.post("/", uploadBeats, verificarAdmin, (req, res) => {
+
+    if (!req.body) {
+        return res.status(500).json({
+            mensaje: "Error procesando los datos del formulario."
+        });
+    }
 
     const {
         titulo,
@@ -69,7 +82,8 @@ router.post("/", verificarAdmin, (req, res) => {
         precio,
         licencia,
         youtube_url,
-        estado
+        estado,
+        descripcion
     } = req.body;
 
     if (!titulo || !genero || !precio) {
@@ -78,10 +92,24 @@ router.post("/", verificarAdmin, (req, res) => {
         });
     }
 
+    // Generar URLs para los archivos subidos
+    let miniaturaUrl = null;
+    let audioPreviewUrl = null;
+
+    if (req.files && req.files['miniatura']) {
+        const file = req.files['miniatura'][0];
+        miniaturaUrl = `http://localhost:3002/uploads/covers/${file.filename}`;
+    }
+
+    if (req.files && req.files['audio_preview']) {
+        const file = req.files['audio_preview'][0];
+        audioPreviewUrl = `http://localhost:3002/uploads/previews/${file.filename}`;
+    }
+
     const sql = `
         INSERT INTO beats
-        (titulo, genero, bpm, tonalidad, precio, licencia, youtube_url, estado)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        (titulo, genero, bpm, tonalidad, precio, licencia, youtube_url, estado, descripcion, miniatura_url, audio_preview_url)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     const valores = [
@@ -92,7 +120,10 @@ router.post("/", verificarAdmin, (req, res) => {
         precio,
         licencia,
         youtube_url,
-        estado || "borrador"
+        estado || "borrador",
+        descripcion || null,
+        miniaturaUrl,
+        audioPreviewUrl
     ];
 
     db.query(sql, valores, (error, resultado) => {
@@ -116,7 +147,7 @@ router.post("/", verificarAdmin, (req, res) => {
 // ACTUALIZAR UN BEAT
 // Solo administrador
 // ======================================================
-router.put("/:id", verificarAdmin, (req, res) => {
+router.put("/:id", uploadBeats, verificarAdmin, (req, res) => {
 
     const { id } = req.params;
 
@@ -128,8 +159,23 @@ router.put("/:id", verificarAdmin, (req, res) => {
         precio,
         licencia,
         youtube_url,
-        estado
+        estado,
+        descripcion
     } = req.body;
+
+    // Generar URLs para los archivos subidos
+    let miniaturaUrl = null;
+    let audioPreviewUrl = null;
+
+    if (req.files && req.files['miniatura']) {
+        const file = req.files['miniatura'][0];
+        miniaturaUrl = `http://localhost:3002/uploads/covers/${file.filename}`;
+    }
+
+    if (req.files && req.files['audio_preview']) {
+        const file = req.files['audio_preview'][0];
+        audioPreviewUrl = `http://localhost:3002/uploads/previews/${file.filename}`;
+    }
 
     const sql = `
         UPDATE beats
@@ -141,7 +187,10 @@ router.put("/:id", verificarAdmin, (req, res) => {
             precio = ?,
             licencia = ?,
             youtube_url = ?,
-            estado = ?
+            estado = ?,
+            descripcion = ?,
+            miniatura_url = COALESCE(?, miniatura_url),
+            audio_preview_url = COALESCE(?, audio_preview_url)
         WHERE id = ?
     `;
 
@@ -154,6 +203,9 @@ router.put("/:id", verificarAdmin, (req, res) => {
         licencia,
         youtube_url,
         estado,
+        descripcion,
+        miniaturaUrl,
+        audioPreviewUrl,
         id
     ];
 
@@ -189,19 +241,19 @@ router.delete("/:id", verificarAdmin, (req, res) => {
 
     const sql = "DELETE FROM beats WHERE id = ?";
 
-    db.query(sql, [id], (error, resultado) => {
+    db.query(sql, valores, (error, resultado) => {
 
         if (error) {
             console.error("Error al eliminar beat:", error);
 
             return res.status(500).json({
-                mensaje: "Error en el servidor."
+                mensaje: "Error al eliminar beat."
             });
         }
 
         if (resultado.affectedRows === 0) {
             return res.status(404).json({
-                mensaje: "Beat no encontrado."
+                mensaje: "Error al eliminar el beat."
             });
         }
 

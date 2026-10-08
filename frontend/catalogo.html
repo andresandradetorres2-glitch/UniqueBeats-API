@@ -129,7 +129,7 @@
         <div style="max-width: 1200px; margin: 0 auto;">
             <h2 class="section-title" id="catalog-grid-title" style="text-align: center;">Explora los <span class="highlight">Beats</span></h2>
 
-            <div class="catalog-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem;">
+            <div id="beatsCatalog" class="catalog-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem;">
 
                 <!-- Beat 1 -->
                 <article class="beat-card">
@@ -226,28 +226,58 @@
                     </div>
                 </article>
 
-                <!-- Beat 6 -->
-                <article class="beat-card">
-                    <div class="beat-image">
-                        <i class="fas fa-bolt" style="font-size: 4rem; color: var(--accent-color, #00ffff);"></i>
-                        <span class="beat-tag tag-exclusive">Exclusive</span>
-                    </div>
-                    <div class="beat-info">
-                        <h3>Thunder Strike</h3>
-                        <p><strong>Género:</strong> Trap | <strong>BPM:</strong> 155 | <strong>Tonalidad:</strong> Mi m</p>
-                        <p><strong>Licencia:</strong> Exclusiva</p>
-                        <span class="beat-price">$120.00 <span style="font-size: 0.8rem; opacity: 0.7;">USD</span></span>
-                        <div class="beat-actions" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 1rem;">
-                            <a href="#" class="btn-beat btn-buy" title="Escuchar"><i class="fas fa-play"></i></a>
-                            <a href="#" class="btn-beat btn-buy" title="Agregar al carrito"><i class="fas fa-shopping-cart"></i></a>
-                            <a href="#" class="btn-beat btn-buy" title="Ver detalles"><i class="fas fa-info-circle"></i></a>
-                        </div>
-                    </div>
-                </article>
+                <!-- Modal de Detalles del Beat -->
+    <div id="beatModal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: center; padding: 20px;">
+        <div class="modal-content" style="background: #1a1a1a; color: white; width: 100%; max-width: 600px; border-radius: 20px; border: 1px solid #333; position: relative; overflow: hidden; animation: modalFadeIn 0.3s ease-out;">
+            <button id="closeModal" style="position: absolute; top: 20px; right: 20px; background: none; border: none; color: #888; font-size: 1.5rem; cursor: pointer; transition: 0.3s; z-index: 10;" title="Cerrar">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <div id="modalBody" style="padding: 3rem 2rem;">
+                <!-- El contenido se genera dinámicamente en catalogo.js -->
+            </div>
+        </div>
+    </div>
+
+    <style>
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .modal-content:hover {
+            border-color: var(--accent-color, #00ffff);
+            transition: 0.3s;
+        }
+    </style>
 
             </div>
         </div>
     </section>
+
+    <!-- Modal de Detalles del Beat -->
+    <div id="beatModal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: center; padding: 20px;">
+        <div class="modal-content" style="background: #1a1a1a; color: white; width: 100%; max-width: 600px; border-radius: 20px; border: 1px solid #333; position: relative; overflow: hidden; animation: modalFadeIn 0.3s ease-out;">
+            <button id="closeModal" style="position: absolute; top: 20px; right: 20px; background: none; border: none; color: #888; font-size: 1.5rem; cursor: pointer; transition: 0.3s; z-index: 10;" title="Cerrar">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <div id="modalBody" style="padding: 3rem 2rem;">
+                <!-- El contenido se genera dinámicamente en catalogo.js -->
+            </div>
+        </div>
+    </div>
+
+    <style>
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .modal-content:hover {
+            border-color: var(--accent-color, #00ffff);
+            transition: 0.3s;
+        }
+    </style>
+
 
     <!-- ========================
          SOLICITUD PERSONALIZADA

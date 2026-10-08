@@ -235,29 +235,8 @@ function mostrarMiniReproductor(beatId, audioUrl) {
 
     container.innerHTML = `
         <div class="mini-player">
-            <div class="player-top-row">
-                <div class="player-controls">
-                    <button onclick="seekAudioRelative(${beatId}, -5)" class="player-btn" title="Retroceder 5s">
-                        <i class="fas fa-backward"></i>
-                    </button>
-                    <button onclick="togglePlayBeat(${beatId}, '${audioUrl}')" class="player-btn" id="mini-play-btn-${beatId}">
-                        <i class="fas ${audioPlayer.isPlaying ? 'fa-pause' : 'fa-play'}"></i>
-                    </button>
-                    <button onclick="seekAudioRelative(${beatId}, 5)" class="player-btn" title="Adelantar 5s">
-                        <i class="fas fa-forward"></i>
-                    </button>
-                </div>
-                <div class="volume-container">
-                    <button onclick="toggleMute(${beatId})" class="player-btn" id="mute-btn-${beatId}">
-                        <i class="fas fa-volume-up"></i>
-                    </button>
-                    <input type="range" min="0" max="1" step="0.1" value="1"
-                           oninput="setVolume(${beatId}, this.value)"
-                           class="volume-slider-vertical">
-                </div>
-            </div>
-            <div class="progress-container">
-                <span id="time-current-${beatId}">${formatTime(audioPlayer.currentAudio ? audioPlayer.currentAudio.currentTime : 0)}</span>
+            <div class="player-progress-row">
+                <span id="time-current-${beatId}" class="time-label">${formatTime(audioPlayer.currentAudio ? audioPlayer.currentAudio.currentTime : 0)}</span>
                 <div class="progress-bar-bg"
                      onclick="handleProgressClick(event, ${beatId})"
                      onmousemove="showTooltip(event, ${beatId})"
@@ -265,7 +244,20 @@ function mostrarMiniReproductor(beatId, audioUrl) {
                     <div class="progress-bar-fill" id="progress-fill-${beatId}"></div>
                     <div id="tooltip-${beatId}" class="progress-tooltip">0:00</div>
                 </div>
-                <span id="time-total-${beatId}">${formatTime(audioPlayer.currentAudio ? audioPlayer.currentAudio.duration : 0)}</span>
+                <span id="time-total-${beatId}" class="time-label">${formatTime(audioPlayer.currentAudio ? audioPlayer.currentAudio.duration : 0)}</span>
+            </div>
+            <div class="player-controls-row">
+                <button onclick="togglePlayBeat(${beatId}, '${audioUrl}')" class="player-btn main-play" id="mini-play-btn-${beatId}">
+                    <i class="fas ${audioPlayer.isPlaying ? 'fa-pause' : 'fa-play'}"></i>
+                </button>
+                <div class="volume-group">
+                    <button onclick="toggleMute(${beatId})" class="player-btn volume-btn" id="mute-btn-${beatId}">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                    <input type="range" min="0" max="1" step="0.05" value="1"
+                           oninput="setVolume(${beatId}, this.value)"
+                           class="volume-slider-horizontal">
+                </div>
             </div>
         </div>
     `;

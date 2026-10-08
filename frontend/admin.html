@@ -274,74 +274,74 @@
                 <form class="admin-form">
                     <div class="form-group">
                         <label>Nombre del Beat</label>
-                        <input type="text" placeholder="Ej. Neon Dreams">
+                        <input type="text" id="beatTitulo" placeholder="Ej. Neon Dreams">
                     </div>
                     <div class="form-group">
                         <label>Género</label>
-                        <select>
-                            <option>Trap</option>
-                            <option>Lo-Fi</option>
-                            <option>Reggaetón</option>
-                            <option>Synthwave</option>
-                            <option>Boom Bap</option>
-                            <option>R&B</option>
-                            <option>Drill</option>
-                            <option>Dancehall</option>
-                            <option>Electronic/Experimental</option>
-                            <option>Pop</option>
-                            <option>Synthpop</option>
-                            <option>Indie</option>
-                            <option>Jazz</option>
-                            <option>Afrobeat</option>
-                            <option>Latin</option>
-                            <option>Bossa Nova</option>
+                        <select id="beatGenero">
+                            <option value="Trap">Trap</option>
+                            <option value="Lo-Fi">Lo-Fi</option>
+                            <option value="Reggaetón">Reggaetón</option>
+                            <option value="Synthwave">Synthwave</option>
+                            <option value="Boom Bap">Boom Bap</option>
+                            <option value="R&B">R&B</option>
+                            <option value="Drill">Drill</option>
+                            <option value="Dancehall">Dancehall</option>
+                            <option value="Electronic/Experimental">Electronic/Experimental</option>
+                            <option value="Pop">Pop</option>
+                            <option value="Synthpop">Synthpop</option>
+                            <option value="Indie">Indie</option>
+                            <option value="Jazz">Jazz</option>
+                            <option value="Afrobeat">Afrobeat</option>
+                            <option value="Latin">Latin</option>
+                            <option value="Bossa Nova">Bossa Nova</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label>BPM</label>
-                        <input type="number" placeholder="120">
+                        <input type="number" id="beatBpm" placeholder="120">
                     </div>
                     <div class="form-group">
                         <label>Tonalidad</label>
-                        <input type="text" placeholder="Do m">
+                        <input type="text" id="beatTonalidad" placeholder="Do m">
                     </div>
                     <div class="form-group">
                         <label>Precio ($)</label>
-                        <input type="number" step="0.01" placeholder="29.99">
+                        <input type="number" id="beatPrecio" step="0.01" placeholder="29.99">
                     </div>
                     <div class="form-group">
                         <label>Tipo de Licencia</label>
-                        <select>
-                            <option>Básica</option>
-                            <option>Premium</option>
-                            <option>Exclusiva</option>
+                        <select id="beatLicencia">
+                            <option value="Básica">Licencia Básica — MP3</option>
+                            <option value="Estándar">Licencia Estándar — WAV</option>
+                            <option value="Stems">Licencia Stems — WAV + pistas separadas</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Link de YouTube</label>
-                        <input type="url" placeholder="https://youtube.com/watch?v=...">
+                        <input type="url" id="beatYoutube" placeholder="https://youtube.com/watch?v=...">
                     </div>
                     <div class="form-group">
                         <label>Miniatura (Imagen)</label>
-                        <input type="file" accept="image/*">
+                        <input type="file" id="beatMiniatura" accept="image/*">
                     </div>
                     <div class="form-group">
                         <label>Archivo de Audio</label>
-                        <input type="file" accept="audio/*">
+                        <input type="file" id="beatAudio" accept="audio/*">
                     </div>
                     <div class="form-group">
                         <label>Estado</label>
-                        <select>
-                            <option>Publicado</option>
-                            <option>Borrador</option>
+                        <select id="beatEstado">
+                            <option value="Publicado">Publicado</option>
+                            <option value="Borrador">Borrador</option>
                         </select>
                     </div>
                     <div class="form-group full-width">
                         <label>Descripción</label>
-                        <textarea rows="4" placeholder="Describe la vibra del beat..."></textarea>
+                        <textarea id="beatDescripcion" rows="4" placeholder="Describe la vibra del beat..."></textarea>
                     </div>
                     <div class="full-width" style="text-align: right;">
-                        <button type="submit" class="btn btn-primary" style="padding: 12px 30px; cursor: pointer;">Guardar Beat 💎</button>
+                        <button type="submit" id="btnGuardarBeat" class="btn btn-primary" style="padding: 12px 30px; cursor: pointer;">Guardar Beat 💎</button>
                     </div>
                 </form>
             </section>
