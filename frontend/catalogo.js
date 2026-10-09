@@ -76,25 +76,68 @@ function prepararFiltrosCatalogo() {
 
 function filtrarCardsExistentes() {
     const busqueda = obtenerValor("search-beat").toLowerCase();
-    const genero = obtenerValor("filter-genre");
+    const genero = obtenerValor("filter-genre").toLowerCase();
     const bpm = obtenerValor("filter-bpm");
-    const licencia = obtenerValor("filter-license");
+    const licencia = obtenerValor("filter-license").toLowerCase();
     const precioMaximo = Number(obtenerValor("filter-price"));
     const cards = document.querySelectorAll(".beat-card");
 
     cards.forEach((card) => {
         const texto = card.textContent.toLowerCase();
         const precio = extraerPrecio(card);
+
+        // 1. Buscar por nombre
         const coincideNombre = !busqueda || texto.includes(busqueda);
-        const coincideGenero = !genero || texto.includes(normalizarTexto(genero));
-        const coincideLicencia = !licencia || texto.includes(normalizarTexto(licencia));
+
+        // 2. Filtrar por género (comparación flexible)
+        const coincideGenero = !genero || texto.includes(genero);
+
+        // 3. Filtrar por licencia (comparación flexible)
+        const coincideLicencia = !licencia || texto.includes(licencia);
+
+        // 4. Filtrar por precio máximo
         const coincidePrecio = !precioMaximo || precio <= precioMaximo;
+
+        // 5. Filtrar por rango de BPM
         const coincideBpm = !bpm || coincideRangoBpm(texto, bpm);
 
         card.style.display = coincideNombre && coincideGenero && coincideLicencia && coincidePrecio && coincideBpm
             ? ""
             : "none";
     });
+
+    // Mensaje de "No hay coincidencias"
+    const contenedor = document.getElementById("beatsCatalog");
+    const beatsVisibles = Array.from(cards).filter(card => card.style.display !== "none");
+
+    if (beatsVisibles.length === 0) {
+        // Para no borrar el contenido original, podemos añadir un mensaje temporal o manejarlo mediante un contenedor
+        // Pero la implementación actual borra el contenido al cargar.
+        // Lo más limpio es añadir un mensaje al final si no hay resultados.
+        if (!document.getElementById("no-results-msg")) {
+            const msg = document.createElement("div");
+            msg.id = "no-results-msg";
+            msg.style = "grid-column: 1/-1; text-align: center; padding: 3rem; color: white;";
+            msg.innerHTML = `
+                <i class="fas fa-search" style="font-size: 3rem; color: #555; margin-bottom: 1rem;"></i>
+                <p style="font-size: 1.2rem;">No encontramos ningún beat que coincida con tus filtros. 💎</p>
+                <button onclick="limpiarFiltros()" class="btn btn-primary" style="margin-top: 1rem; cursor: pointer; padding: 10px 20px;">Limpiar Filtros</button>
+            `;
+            contenedor.appendChild(msg);
+        }
+    } else {
+        const msg = document.getElementById("no-results-msg");
+        if (msg) msg.remove();
+    }
+}
+
+function limpiarFiltros() {
+    document.getElementById("search-beat").value = "";
+    document.getElementById("filter-genre").value = "";
+    document.getElementById("filter-bpm").value = "";
+    document.getElementById("filter-license").value = "";
+    document.getElementById("filter-price").value = "";
+    filtrarCardsExistentes();
 }
 
 function crearBeatCard(beat) {
@@ -453,7 +496,7 @@ function configurarModal() {
 }
 
 function obtenerValor(id) {
-    const elemento = document.getElementById("search-beat");
+    const elemento = document.getElementById(id);
     return elemento ? elemento.value.trim() : "";
 }
 
