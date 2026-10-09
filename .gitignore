@@ -11,3 +11,7 @@ backend/dummy_img.jpg
 
 # Configuración y estado local de Claude Code
 .claude/
+
+# Documento de contexto del proyecto
+CONTEXTO_PROYECTO_UNIQUEBEATS.md
+
