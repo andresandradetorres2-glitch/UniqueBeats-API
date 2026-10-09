@@ -238,10 +238,9 @@ router.put("/:id", uploadBeats, verificarAdmin, (req, res) => {
 router.delete("/:id", verificarAdmin, (req, res) => {
 
     const { id } = req.params;
-
     const sql = "DELETE FROM beats WHERE id = ?";
 
-    db.query(sql, valores, (error, resultado) => {
+    db.query(sql, [id], (error, resultado) => {
 
         if (error) {
             console.error("Error al eliminar beat:", error);

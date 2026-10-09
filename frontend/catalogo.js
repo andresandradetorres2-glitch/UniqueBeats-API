@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     prepararFiltrosCatalogo();
     cargarBeatsDesdeAPI();
     configurarModal();
+    actualizarMenuSesion();
 });
 
 async function cargarBeatsDesdeAPI() {
@@ -150,6 +151,33 @@ function obtenerInfoVisual(genero) {
 // ======================================================
 // LÓGICA DEL REPRODUCTOR DE AUDIO
 // ======================================================
+
+function actualizarMenuSesion() {
+    const sesion = localStorage.getItem('usuario');
+    if (!sesion) return;
+
+    try {
+        const usuario = JSON.parse(sesion);
+        const adminPanelLink = document.getElementById('adminPanelLink');
+        const accountLink = document.getElementById('accountLink');
+
+        if (adminPanelLink && usuario.tipo === 'admin') {
+            adminPanelLink.style.display = 'block';
+        }
+
+        if (accountLink) {
+            accountLink.textContent = 'Cerrar sesión';
+            accountLink.href = '#';
+            accountLink.onclick = (event) => {
+                event.preventDefault();
+                localStorage.removeItem('usuario');
+                window.location.href = 'login.html';
+            };
+        }
+    } catch (error) {
+        console.error('Error actualizando menú de sesión:', error);
+    }
+}
 
 function formatTime(seconds) {
     const min = Math.floor(seconds / 60);

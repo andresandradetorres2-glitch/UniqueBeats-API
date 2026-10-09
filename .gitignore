@@ -8,3 +8,6 @@ backend/uploads/
 # Archivos de prueba
 backend/dummy_audio.mp3
 backend/dummy_img.jpg
+
+# Configuración y estado local de Claude Code
+.claude/

@@ -1,9 +1,11 @@
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
+require("dotenv").config({ path: path.join(__dirname, ".env") });
 
 const authRoutes = require("./routes/auth");
 const beatsRoutes = require("./routes/beats");
+const statsRoutes = require("./routes/stats");
 const verificarToken = require("./middleware/authMiddleware");
 
 const app = express();
@@ -24,6 +26,9 @@ app.use("/api/auth", authRoutes);
 
 // Rutas de beats
 app.use("/api/beats", beatsRoutes);
+
+// Rutas de estadísticas
+app.use("/api/stats", statsRoutes);
 
 // Ruta principal para comprobar que el servidor funciona
 app.get("/", (req, res) => {
